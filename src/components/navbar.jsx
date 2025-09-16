@@ -1,12 +1,13 @@
 // src/components/Navbar.jsx
 import React, { useState, useRef, useEffect } from "react";
-import { FaUser, FaHeart, FaShoppingCart, FaStore } from "react-icons/fa";
+import { FaUser, FaHeart, FaShoppingCart } from "react-icons/fa";
 import { HiOutlineMenu } from "react-icons/hi";
 import { MdSearch } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser, refreshSession } from "../redux/authSlice";
 import logo from "../assets/logo.png";
+import OffersBar from "./OffersBar";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -58,21 +59,19 @@ const Navbar = () => {
   ];
 
   const profileMenu = [
-    { label: "My Profile" },
-    { label: "My Orders" },
-    { label: "My Wishlist" },
-    { label: "Saved Addresses" },
-    { label: "Wallet" },
-    { label: "Track Order" },
-    { label: "Customer Support" },
+    { label: "My Profile", path: "/profile" },
+    { label: "My Address", path: "/addresses" },
+    { label: "My Order", path: "/orders" },
+    { label: "My Wishlist", path: "/wishlist" },
+    { label: "Change Password", path: "/change-password" },
+    { label: "Track Order", path: "/track-order" },
+    { label: "Logout", action: "/logout" },
   ];
 
   // ------------------- Effects -------------------
   useEffect(() => {
-    // Refresh session on mount (silent login)
     dispatch(refreshSession());
 
-    // Close dropdown on outside click
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false);
@@ -83,21 +82,47 @@ const Navbar = () => {
   }, [dispatch]);
 
   // ------------------- Handlers -------------------
-  const handleProfileClick = () => setDropdownOpen((prev) => !prev);
+  const handleProfileClick = () => {
+    if (!user) {
+      navigate("/login");
+    } else {
+      setDropdownOpen((prev) => !prev);
+    }
+  };
+
+  const handleWishlistClick = () => {
+    if (!user) {
+      navigate("/login");
+    } else {
+      navigate("/wishlist");
+    }
+  };
+
+  const handleCartClick = () => {
+    if (!user) {
+      navigate("/login");
+    } else {
+      navigate("/cart");
+    }
+  };
+
   const handleLogout = () => {
     dispatch(logoutUser());
     setDropdownOpen(false);
+    navigate("/login");
   };
 
   return (
-    <nav className="w-full font-sans relative z-50">
-      {/* Sticky Container */}
+    <header className="w-full font-sans sticky top-0 z-50 bg-white shadow-md">
+      <OffersBar />
+      {/* Sticky Main Navbar */}
       <div className="sticky top-0 z-50 bg-white shadow-md">
+        
         {/* Desktop Navbar */}
-        <div className="hidden md:flex items-center justify-between px-8 py-3 bg-white">
+        <div className="hidden md:flex items-center justify-between px-12 py-1 bg-white">
           {/* Logo */}
           <div className="flex items-center cursor-pointer" onClick={() => navigate("/")}>
-            <img src={logo} alt="Logo" className="h-16 lg:h-20 w-auto" />
+            <img src={logo} alt="Logo" className="h-16 lg:h-18 w-auto" />
           </div>
 
           {/* Search */}
@@ -116,7 +141,7 @@ const Navbar = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-8 text-yellow-700 relative">
-            {/* Profile Dropdown */}
+            {/* Profile */}
             <div
               ref={dropdownRef}
               className="flex flex-col items-center text-sm hover:text-black cursor-pointer relative"
@@ -125,43 +150,28 @@ const Navbar = () => {
               <FaUser size={20} />
               <span>{user ? `Hi ${user.name}` : "Profile"}</span>
 
-              {dropdownOpen && (
+              {/* Dropdown (only logged in) */}
+              {user && dropdownOpen && (
                 <div className="absolute top-12 left-1/2 -translate-x-1/2 w-60 bg-white border rounded-lg shadow-lg text-gray-700 z-50">
-                  {!user ? (
-                    <div className="p-4 border-b">
-                      <button
-                        onClick={() => navigate("/login")}
-                        className="w-full bg-black text-white py-2 rounded-md text-sm font-medium hover:bg-gray-800 transition"
-                      >
-                        SIGN IN
-                      </button>
-                      <p className="text-xs mt-2">
-                        New Customer?{" "}
-                        <span
-                          className="text-[#BD8E4A] font-medium cursor-pointer hover:underline"
-                          onClick={() => navigate("/signup")}
-                        >
-                          Start Here
-                        </span>
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="p-4 border-b">
-                      <p className="font-medium">Hello, {user.name}</p>
-                      <button
-                        onClick={handleLogout}
-                        className="mt-2 w-full bg-red-500 text-white py-2 rounded-md text-sm font-medium hover:bg-red-600 transition"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  )}
+                  <div className="p-4 border-b">
+                    <p className="font-medium">Hello, {user.name}</p>
+                    <button
+                      onClick={handleLogout}
+                      className="mt-2 w-full bg-red-500 text-white py-2 rounded-md text-sm font-medium hover:bg-red-600 transition"
+                    >
+                      Logout
+                    </button>
+                  </div>
 
                   <ul className="flex flex-col text-sm">
                     {profileMenu.map((item, idx) => (
                       <li
                         key={idx}
                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          navigate(item.path);
+                        }}
                       >
                         {item.label}
                       </li>
@@ -174,31 +184,27 @@ const Navbar = () => {
             {/* Wishlist */}
             <div
               className="flex flex-col items-center text-sm hover:text-black cursor-pointer"
-              onClick={() => navigate("/wishlist")}
+              onClick={handleWishlistClick}
             >
               <FaHeart size={20} />
-              <span>Wishlist ({wishlistCount})</span>
+              {user && wishlistCount > 0 && <span>Wishlist ({wishlistCount})</span>}
+              {(!user || wishlistCount === 0) && <span>Wishlist</span>}
             </div>
 
             {/* Cart */}
             <div
               className="flex flex-col items-center text-sm hover:text-black cursor-pointer"
-              onClick={() => navigate("/cart")}
+              onClick={handleCartClick}
             >
               <FaShoppingCart size={20} />
-              <span>Cart ({cartCount})</span>
-            </div>
-
-            {/* Stores */}
-            <div className="flex flex-col items-center text-sm hover:text-black cursor-pointer">
-              <FaStore size={20} />
-              <span>Stores</span>
+              {user && cartCount > 0 && <span>Cart ({cartCount})</span>}
+              {(!user || cartCount === 0) && <span>Cart</span>}
             </div>
           </div>
         </div>
 
         {/* Desktop Menu Links */}
-        <div className="hidden md:flex items-center justify-center gap-10 py-3 border-t border-gray-200 bg-white text-sm font-medium">
+        <div className="hidden md:flex items-center justify-center gap-10 py-2 border-t border-gray-200 bg-white text-sm font-medium">
           <a href="#" className="hover:text-yellow-700">Home Sofas</a>
           <a href="#" className="hover:text-yellow-700">Office Sofas</a>
           <a href="#" className="hover:text-yellow-700">Office Tables</a>
@@ -207,40 +213,35 @@ const Navbar = () => {
           <a href="#" className="hover:text-yellow-700">Office Furniture</a>
         </div>
 
-        {/* ---------------- Mobile Navbar ---------------- */}
+        {/* Mobile Navbar */}
         <div className="md:hidden relative px-4 py-3 bg-white flex items-center justify-between">
           <button onClick={() => setDrawerOpen(true)} aria-label="Menu">
             <HiOutlineMenu size={28} />
           </button>
 
-          <div className="absolute left-1/2 transform -translate-x-1/2">
+          <div className="absolute left-1/2 pt-4 transform -translate-x-1/2">
             <img
               src={logo}
               alt="Logo"
-              className="h-8 w-auto cursor-pointer"
+              className="h-14 w-auto cursor-pointer"
               onClick={() => navigate("/")}
             />
           </div>
 
-          {/* Only Wishlist & Cart here (Profile removed) */}
           <div className="flex items-center gap-4 text-yellow-700">
-            <FaHeart
-              size={22}
-              className="cursor-pointer"
-              onClick={() => navigate("/wishlist")}
-            />
-            <span className="text-sm">{wishlistCount}</span>
-            <FaShoppingCart
-              size={22}
-              className="cursor-pointer"
-              onClick={() => navigate("/cart")}
-            />
-            <span className="text-sm">{cartCount}</span>
+            <div className="flex items-center cursor-pointer" onClick={handleWishlistClick}>
+              <FaHeart size={22} />
+              {user && wishlistCount > 0 && <span className="text-sm">{wishlistCount}</span>}
+            </div>
+            <div className="flex items-center cursor-pointer" onClick={handleCartClick}>
+              <FaShoppingCart size={22} />
+              {user && cartCount > 0 && <span className="text-sm">{cartCount}</span>}
+            </div>
           </div>
         </div>
 
         {/* Mobile Search */}
-        <div className="md:hidden px-4 pb-3 bg-white">
+        <div className="md:hidden px-4 pb-3 pt-3 bg-white">
           <div className="relative w-full">
             <input
               type="text"
@@ -254,7 +255,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* ---------------- Mobile Drawer ---------------- */}
+      {/* Mobile Drawer */}
       {drawerOpen && (
         <>
           <div
@@ -271,7 +272,6 @@ const Navbar = () => {
             }`}
           >
             <div className="flex items-center justify-between px-4 py-4 border-b">
-              {/* Back Arrow */}
               <button
                 className="text-gray-700"
                 onClick={() => setDrawerOpen(false)}
@@ -280,7 +280,7 @@ const Navbar = () => {
                 <span className="text-2xl">&#8592;</span>
               </button>
 
-              <img src={logo} alt="Logo" className="h-8 w-auto" />
+              <img src={logo} alt="Logo" className="h-10 w-auto" />
 
               <FaUser
                 size={22}
@@ -343,7 +343,7 @@ const Navbar = () => {
           )}
         </>
       )}
-    </nav>
+    </header>
   );
 };
 

@@ -20,7 +20,7 @@ const OffersBar = () => {
   }, [offers.length]);
 
   return (
-    <div className="bg-[#BD8E4A] text-white text-center text-sm py-2 px-4 transition-all duration-500">
+    <div className="bg-[#BD8E4A] text-white text-center text-sm py-1.5 px-4 transition-all duration-500">
       {offers[currentOffer]}
     </div>
   );

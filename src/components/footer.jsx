@@ -7,6 +7,7 @@ import mastercard from "../assets/payments/mastercard.png";
 import maestro from "../assets/payments/maestro.png";
 import amex from "../assets/payments/amex.png";
 import rupay from "../assets/payments/rupay.png";
+import { FaLinkedin } from "react-icons/fa6";
 
 const Footer = () => {
   return (
@@ -19,7 +20,7 @@ const Footer = () => {
             <img src={logo} alt="Logo" className="h-18 mb-3" />
             <p className="text-sm leading-relaxed">
               <strong>Registered Office</strong> <br />
-              The Woodenstreet Furniture's Pvt. Ltd. <br />
+              The Oaksland Furniture's Pvt. Ltd. <br />
               101-104, Luhadia Tower, Ashok Marg, C Scheme, Jaipur-302001. <br />
               Corporate Identity Number: U36100RJ2015PTC047992
             </p>
@@ -57,20 +58,23 @@ const Footer = () => {
           <div className="lg:text-left">
             <h3 className="font-semibold mb-3 underline">Mail Us:</h3>
             <p className="leading-relaxed mb-3 text-sm">
-              Flipkart Internet Private Limited, <br />
+              Oaksland Internet Private Limited, <br />
               Buildings Alyssa, Begonia & Clove Embassy Tech Village, <br />
               Outer Ring Road, Devarabeesanahalli Village, <br />
               Bengaluru, 560103, Karnataka, India
             </p>
             <h3 className="font-semibold mb-2 underline">Social</h3>
             <div className="flex gap-4 text-xl justify-left lg:justify-start">
-              <a href="#" className="hover:text-gray-200">
+              <a href="#" className="border border-white rounded-full p-2 hover:bg-white/20 transition">
                 <FaFacebook />
               </a>
-              <a href="#" className="hover:text-gray-200">
+              <a href="#" className="border border-white rounded-full p-2 hover:bg-white/20 transition">
                 <FaInstagram />
               </a>
-              <a href="#" className="hover:text-gray-200">
+              <a href="#" className="border border-white rounded-full p-2 hover:bg-white/20 transition">
+                <FaLinkedin />
+              </a>
+              <a href="#" className="border border-white rounded-full p-2 hover:bg-white/20 transition">
                 <FaYoutube />
               </a>
             </div>
@@ -85,11 +89,11 @@ const Footer = () => {
           <p>2007-2025 Oaksl.com</p>
           <div className="flex items-center gap-3 flex-wrap">
             <span>We accept:</span>
-            <img src={visa} alt="Visa" className="h-6" />
-            <img src={mastercard} alt="MasterCard" className="h-6" />
-            <img src={maestro} alt="Maestro" className="h-6" />
-            <img src={amex} alt="Amex" className="h-6" />
-            <img src={rupay} alt="RuPay" className="h-6" />
+            <img src={visa} alt="Visa" className="h-6 md:h-10 border border-white rounded-md p-1" />
+            <img src={mastercard} alt="MasterCard" className="h-6 md:h-10 border border-white rounded-md p-1" />
+            <img src={maestro} alt="Maestro" className="h-6 md:h-10 border border-white rounded-md p-1" />
+            <img src={amex} alt="Amex" className="h-6 md:h-10 border border-white rounded-md p-1" />
+            <img src={rupay} alt="RuPay" className="h-6 md:h-10 border border-white rounded-md p-1" />
           </div>
         </div>
       </div>

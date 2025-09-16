@@ -4,7 +4,7 @@ import heroImg from "../assets/hero.jpg"; // ✅ Correct import
 
 const Hero = () => {
   return (
-    <section className="relative w-full h-[90vh] md:h-screen flex items-center justify-center text-center overflow-hidden">
+    <section className="relative w-full h-[60vh] md:h-screen flex items-center justify-center text-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
@@ -17,14 +17,19 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 px-6 md:px-12 text-white max-w-3xl mx-auto">
-        <h1 className="text-3xl md:text-5xl font-medium leading-tight drop-shadow-lg">
+        <h1 className="text-2xl md:text-5xl font-medium leading-tight drop-shadow-lg">
           Where Everyday Moments <br className="hidden md:block" />
           Become Extraordinary
         </h1>
-        <p className="mt-4 text-base md:text-lg text-gray-200">
+        <p className="mt-4 text-sm md:text-lg text-gray-200">
           Explore high-quality customizable office furniture
         </p>
-        <button className="mt-3 bg-[#d7a75f] hover:bg-[#c4944e] text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-all duration-300">
+
+        {/* Responsive Button */}
+        <button className="mt-3 bg-[#d7a75f] hover:bg-[#c4944e] text-white font-semibold 
+          px-4 py-2 text-sm 
+          md:px-6 md:py-3 md:text-base 
+          rounded-lg shadow-lg transition-all duration-300">
           Shop Now
         </button>
       </div>
